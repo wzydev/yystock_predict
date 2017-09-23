@@ -44,7 +44,15 @@ proxy_hosts = [
 
 def get_history(scode,year,quarter):
     url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/{0}.phtml?year={1}&jidu={2}"
-    req = requests.get(url.format(scode,year,quarter),headers=_headers) #, proxies=random.choice(proxy_hosts))
+    print url.format(scode,year,quarter)
+    req = None
+    re_try = 30
+    for i in range(re_try):
+    	try:
+	    req = requests.get(url.format(scode,year,quarter),headers=_headers,timeout=10) #, proxies=random.choice(proxy_hosts))
+            break
+	except Exception,e:
+	    print e
     html = req.text
     soup = BeautifulSoup(html)
     table = soup.find(id="FundHoldSharesTable")
